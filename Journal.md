@@ -1,34 +1,4 @@
-## Project Journal — PathReview
 
-This journal is a friendly, developer-focused running log for local work: quick notes, test runs, debugging insights, and short-term next steps. Keep entries concise and date-stamped.
-
----
-
-### 2026-08-02 — Initial tidy-up and test-focused fixes
-
-- Summary: Cleaned up unit tests and improved a few detectors and evaluators for more reliable behavior during CI.
-- Files touched:
-  - `ingestion/embeddings/batch_processor.py` — ensured per-batch embedding handling is robust
-  - `safety/bias_detector.py` — expanded detection patterns for dismissive language and demographic assumptions
-  - `rag/evaluator/faithfulness_checker.py` — refined claim extraction and support checks
-  - `agent/tools/readme_scorer.py` — scoring thresholds reviewed
-  - Several unit tests under `tests/unit/` adjusted to use side_effect mocks and clearer assertions
-
-- Test results (local):
-  - Ran targeted unit tests; many tests pass locally; a subset require async test plugin (`pytest-asyncio`) to run in this environment.
-
-- Notes & decisions:
-  - Keep detector regexes conservative to reduce false positives.
-  - Use per-batch embedding mocking in tests via `side_effect=lambda texts: [...]` so tests reflect true batching behavior.
-
-- Next steps:
-  1. Install and run full test suite with `pytest-asyncio` to exercise async tests: `python -m pip install pytest-asyncio` and `python -m pytest -q`.
-  2. Review any remaining failing tests and open focused PRs with one behavioral change per PR.
-  3. Add a short CONTRIBUTING note on how to run unit tests locally on Windows (Git Bash recommended).
-
----
-
-If you'd like, I can: (a) expand this journal with a template for daily entries, (b) add automatic test-run snippets, or (c) convert it into `docs/DEVELOPER-JOURNAL.md` for team-wide visibility. Which would you prefer?
 ## Week 7 — Issue selection
 
 **Issue link:** https://github.com/ascherj/pathreview/issues/146#
