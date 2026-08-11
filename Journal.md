@@ -75,3 +75,35 @@ Running the four tests named in the issue (`test_us_phone_number_redaction`, `te
 
 **Blockers or open questions:**
 None — both root causes were clearly identified from the regex and confirmed locally with pytest.
+
+
+## Week 9 — Solution building & PR submission
+
+### Check-in 1 (mid-week)
+
+**Current progress:**
+All sub-tasks from PLAN.md are complete. The `phone_us` regex was updated to use `(?<!\w)`/`(?!\w)` lookarounds instead of `\b` and the separator class was widened to `[-. ]?`. The pre-existing `street_address` false-positive (short abbreviation `Pl` matching inside `applications`) was also fixed by replacing the greedy `[A-Za-z\s]+` with `(?:[A-Za-z]+\s+)*`. Two minor pre-existing lint warnings in the same file were cleaned up (import sort `I001`, unused loop variable `B007`). All 25 unit tests in `tests/unit/test_pii_scrubber.py` pass.
+
+**Next steps:**
+Push branch to fork, open PR, and confirm submission.
+
+**Blockers:**
+None.
+
+---
+
+### Check-in 2 (end of week)
+
+**PR link:** [paste your PR link here after opening it]
+
+**Branch:** `fix/146-pii-scrubber-parenthesized-phone`
+
+**What you built:**
+The `PIIScrubber` regex for US phone numbers previously failed to match the parenthesized format `(555) 123-4567` because `\b` requires a word character on one side (a space before `(` has none) and `[-.]?` does not allow the space between `)` and the exchange digits. The fix replaces `\b` with `(?<!\w)`/`(?!\w)` lookarounds and widens each separator to `[-. ]?`, making all common US phone formats — dashed, dotted, parenthesized, and space-separated — match consistently in both `scrub()` and `detect()`. A pre-existing street-address false-positive was fixed in the same pass.
+
+**Tests added or updated:**
+No new tests were needed — `tests/unit/test_pii_scrubber.py` already contained the four tests named in the issue (`test_us_phone_number_redaction`, `test_us_phone_formats`, `test_detect_phone_pii`, `test_phone_at_start_of_text`) plus `test_mixed_pii_and_text`. All 25 tests in that file now pass; none were passing before for the parenthesized format.
+
+**Self-review confirmation:** [x] make check passes (safety/ module clean; pre-existing E501s documented)  [x] make test-unit passes (25/25 in test_pii_scrubber.py; 48 pre-existing failures in other modules unchanged)
+
+**Draft PR feedback received from:** none
