@@ -62,9 +62,16 @@ print(s.scrub('Call me at (555) 123-4567 or 555-123-4567'))
 print(s.detect('Call me at (555) 123-4567'))
 # observed: []
 ```
+## Week 8 — Reproduction & solution planning
+
+**Reproduction commit link:** 
+
+**Reproduction summary:**
+Running the four tests named in the issue (`test_us_phone_number_redaction`, `test_us_phone_formats`, `test_detect_phone_pii`, `test_phone_at_start_of_text`) against the unpatched code confirmed the bug: `scrub()` left `(555) 123-4567` in the output unchanged, and `detect()` returned an empty list for the same string. A fifth pre-existing failure (`test_mixed_pii_and_text`) was also discovered — the `street_address` regex matched `pl` inside `applications` as the street-type abbreviation `Pl`, causing unrelated text to be redacted.
+
 **PLAN.md link:** [PLAN.md](PLAN.md)
 
-**Walkthrough video (recommended):** [link to your Loom video, ≤2 min — recommended, not graded]
+**Walkthrough video (recommended):** N/A
 
 **Blockers or open questions:**
-[Anything you're still uncertain about going into Week 9, or leave blank]
+None — both root causes were clearly identified from the regex and confirmed locally with pytest.
