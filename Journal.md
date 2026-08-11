@@ -107,3 +107,35 @@ No new tests were needed — `tests/unit/test_pii_scrubber.py` already contained
 **Self-review confirmation:** [x] make check passes (safety/ module clean; pre-existing E501s documented)  [x] make test-unit passes (25/25 in test_pii_scrubber.py; 48 pre-existing failures in other modules unchanged)
 
 **Draft PR feedback received from:** none
+
+
+## Week 10 — Iteration & reflection
+
+### Reviewer feedback
+
+**Feedback received:** [ ] Yes  [x] No — still awaiting review
+
+**Summary of feedback:**
+No reviewer feedback has arrived. Per the Su26 course note, reviewer feedback is not a feature in Summer 2026.
+
+**How you responded:**
+N/A — no feedback to respond to.
+
+---
+
+### Reflection
+
+**What was harder than you expected?**
+The regex debugging was harder to reason about than I initially expected. I assumed the fix would be a one-line change to the separator class, but when I tested it I still couldn't match `(555) 123-4567`. Only after stepping through the pattern character by character did I realize there was a second, independent problem: the `\b` word-boundary anchor at the start. A `\b` before `\(?` fails silently when the phone number is preceded by whitespace, because both the space and the `(` are non-word characters — there is no boundary between two non-word characters, so the pattern never starts. That kind of invisible failure, where the regex engine simply skips past the match without any error, is much harder to diagnose than an exception would be.
+
+**What did you learn about working in a large codebase?**
+The biggest difference from building my own project is that I could not change anything in isolation. When I ran `make test-unit`, 48 tests were already failing across modules I never touched. I had to verify carefully — by running the test suite before and after my change — that the failures were pre-existing and not caused by me. In a solo project I would have fixed everything I saw; here, the right move was to document the pre-existing failures and leave them alone so the PR stayed focused. That discipline — staying in scope even when you can see other problems nearby — is something I had to learn actively rather than just read about.
+
+**How did AI tools help — and where did they fall short?**
+AI assistance was most useful for two things: explaining what each part of a regex pattern does in plain English (which made it faster to identify the `\b` issue), and generating the structured documents — `PLAN.md`, `JOURNAL.md` entries, and the PR description — that follow a rigid template. It was less useful for the actual debugging judgment call: deciding which of the two regex problems was causing the failure required running the code and observing the output, not just reading the pattern. AI described what the pattern *should* do, but only running `pytest` against the real data revealed what it *actually* did. The lesson is that AI speeds up understanding and writing, but can't replace running the code.
+
+**What would you do differently if you started over?**
+I would run `make test-unit` and `make lint` on the unmodified `main` branch before writing a single line, and record those baseline results. I documented the pre-existing failures in my PR, but I did it after the fact by re-running the checks. Having the baseline recorded upfront would have made it trivial to prove that my changes introduced nothing new, rather than reasoning backwards from the final state.
+
+**What are you most proud of from this module?**
+Finding and fixing the `street_address` false-positive that was not mentioned in the issue. The issue only asked about the phone number pattern, but running the full test suite revealed that `test_mixed_pii_and_text` was also failing because the `Pl` abbreviation (for "Place") was matching the `pl` sub-string inside the word "applications". I traced it to the same file, confirmed it was pre-existing, fixed it cleanly without breaking any other address tests, and documented it in the PR. That felt like the kind of contribution a careful engineer makes — fixing what you find, not just what you were asked to fix.
