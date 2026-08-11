@@ -42,7 +42,7 @@ The personal info scrubbery in pii_scrubber.py is not redacting phone numbers wi
 
 ## Week 8 — Reproduction & solution planning
 
-**Reproduction commit link:** [link to commit documenting the reproduced issue](https://github.com/a-maryam/pathreview/commit/7ac52cff2e60e3c8cf7efe38fd7847ba22a823be)
+**Reproduction commit link:** [link to commit documenting the reproduced issue][https://github.com/ascherj/pathreview/pull/553]
 
 **Reproduction summary:**
 I reproduced the issue by following the instructions for the bug on github: 
